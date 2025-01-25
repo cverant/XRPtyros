@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase{
     XRPServo arm;
-    final static double PICKUP = 0.85;
-    final static double CARRY = 0.69;
+    final static double PICKUP = 0.90; // originally 0.85
+    final static double CARRY = 0.2; // originally 0.69
 
     public Arm() {
         super();

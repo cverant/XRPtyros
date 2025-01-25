@@ -21,7 +21,8 @@ import frc.robot.commands.Turn;
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
- */
+ */       
+
 public class Robot extends TimedRobot {
   XboxController controller;
   
@@ -43,9 +44,24 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData(CommandScheduler.getInstance());
 
+    double forward = controller.getRawAxis(1);
+    // trying to set a deadband {
+     // if(Math.abs(forward.GetValue() < 0.1)) return;
+   // }
+
+    double turn = controller.getRawAxis(0);
+    
+
+    if (forward < .05) {
+      forward = 0;
+    }
+    if (turn < .05) {
+      turn = 0;
+    }
+
     //register commands
-    drive.setDefaultCommand(drive.controllerDrive(() -> controller.getRawAxis(1), () -> controller.getRawAxis(3)));
-    arm.setDefaultCommand(arm.setPosition(() -> controller.getRawAxis(5)));
+    drive.setDefaultCommand(drive.controllerDrive(() -> controller.getRawAxis(1), () -> controller.getRawAxis(4))); // originally: axis 3 - axis 2
+    //arm.setDefaultCommand(arm.setPosition(() -> controller.getRawAxis(5)));
     new Trigger(controller::getAButton).whileTrue(arm.setAngle(Arm.CARRY));
     new Trigger(controller::getYButton).whileTrue(arm.setAngle(Arm.PICKUP));
 
@@ -99,9 +115,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //double percent = -controller.getLeftY();
-    //double turn = -controller.getRightX();
+    double percent = -controller.getLeftY();
+    double turn = -controller.getRightX();
     //use the arcade drive class to factor in the turn commands
+    drive.ArcadeDrive(percent, turn);
     
     //these were used if you want to control the motors directly instead
     //leftDrive.set(percent);
